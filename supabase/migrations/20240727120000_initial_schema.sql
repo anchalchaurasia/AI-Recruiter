@@ -1,4 +1,4 @@
-git commit -m "first commit"CREATE TABLE Users (
+git commit -m "first commit"npm CREATE TABLE Users (
     id bigint,
     created_at timestamp with time zone,
     credits bigint,

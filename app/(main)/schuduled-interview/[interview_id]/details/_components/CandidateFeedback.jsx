@@ -260,6 +260,7 @@ ${candidate?.userEmail || "No Email"}`,
                   </div>
                 </div>
               </div>
+              
             </div>
           </DialogDescription>
         </DialogHeader>
