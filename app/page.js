@@ -8,6 +8,10 @@ export default function Home() {
       <Button>
         <a  href="https://ai-recruiter-olmy.vercel.app/dashboard">Go to The Dashbaord</a>
       </Button>
+      <h2>OR</h2>
+      <Button>
+        <a  href="https://ai-recruiter-olmy.vercel.app/auth">Go to The login page</a>
+      </Button>
     </div>
   );
 }
