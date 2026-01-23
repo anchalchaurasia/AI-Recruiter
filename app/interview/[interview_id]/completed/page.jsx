@@ -4,10 +4,7 @@ import { useRouter } from "next/navigation";
 
 export default function LandingPage() {
   const router = useRouter();
-  const handleCloseBrowser = () => {
-    window.open('', '_self'); // some browsers
-    window.close();
-  };
+ 
 
   return (
    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center px-4">
@@ -27,10 +24,10 @@ export default function LandingPage() {
         Our AIcruiter team appreciates your time and wishes you the best. We’re here to help you succeed.
       </p>
       <button
-        onClick={handleCloseBrowser}
+        
         className="bg-red-600 text-white px-6 py-3 rounded hover:bg-red-700 transition"
       >
-        Close Browser
+       <a href="https://ai-recruiter-olmy.vercel.app/dashboard#">Go to the Dashbaord</a>
       </button>
     </div>
   );
