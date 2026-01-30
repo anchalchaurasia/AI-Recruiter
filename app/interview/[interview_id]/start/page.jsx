@@ -148,25 +148,16 @@ Your task is to ask the candidate the following questions one by one.
     }
 
     const assistantPayload = {
-  name: 'AI Recruiter',
-  firstMessage,
-  transcriber: {
-    provider: 'deepgram',
-    model: 'nova-2',
-    language: 'en-US',
-  },
-  voice: {
-    provider: 'vapi',
-  },
-  model: {
-    provider: 'openai',
-    model: 'gpt-4o-mini',
-    messages: [
-      { role: 'system', content: systemContent },
-    ],
-  },
-};
-
+      name: 'AI Recruiter',
+      firstMessage,
+      transcriber: { provider: 'deepgram', model: 'nova-2', language: 'en-US' },
+      voice: { provider: 'vapi', voiceId: 'Neha' },
+      model: {
+        provider: 'openai',
+        model: 'gpt-4',
+        messages: [{ role: 'system', content: systemContent }],
+      },
+    };
 
     vapi.start(assistantPayload);
   };
