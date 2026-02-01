@@ -22,7 +22,7 @@ function StartInterview() {
   const [isGeneratingFeedback, setIsGeneratingFeedback] = useState(false);
   const conversationRef = useRef([]);
 
-  // Initialize interview info
+  // --- Initialize interview info ---
   useEffect(() => {
     if (!interviewInfo?.interviewData) {
       toast.error('Interview details not found. Please start again.');
@@ -33,13 +33,12 @@ function StartInterview() {
     const durationInMinutes = parseInt(interviewInfo.interviewData.duration, 10) || 5;
     setTimeLeft(durationInMinutes * 60);
 
-    const isResumeType = interviewInfo.interviewData.type === 'resume-based';
-    setIsResumeInterview(isResumeType);
+    setIsResumeInterview(interviewInfo.interviewData.type === 'resume-based');
 
     setLoading(false);
   }, [interviewInfo, interview_id, router]);
 
-  // Fetch resume if resume-based interview
+  // --- Fetch resume if resume-based interview ---
   useEffect(() => {
     if (!isResumeInterview) return;
 
@@ -62,7 +61,7 @@ function StartInterview() {
     fetchResume();
   }, [isResumeInterview, interview_id]);
 
-  // Countdown timer
+  // --- Countdown timer ---
   useEffect(() => {
     if (!isCallActive || timeLeft <= 0) return;
 
@@ -82,7 +81,7 @@ function StartInterview() {
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  // Initialize Vapi
+  // --- Initialize Vapi ---
   useEffect(() => {
     if (!process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY) {
       toast.error('Vapi API key is missing.');
@@ -93,25 +92,22 @@ function StartInterview() {
     return () => instance.stop();
   }, []);
 
-  // Listen to Vapi messages
+  // --- Listen to Vapi messages ---
   useEffect(() => {
     if (!vapi) return;
-
     const handleMessage = message => conversationRef.current.push(message);
     vapi.on('message', handleMessage);
-
     return () => vapi.off('message', handleMessage);
   }, [vapi]);
 
-  // Start interview automatically
+  // --- Start interview automatically ---
   useEffect(() => {
     if (loading || !vapi || !interviewInfo?.interviewData || isCallActive) return;
-
     if (isResumeInterview && (!resumeData || !resumeData.resumeText)) return;
-
     startCall();
   }, [interviewInfo, vapi, resumeData, loading, isResumeInterview, isCallActive]);
 
+  // --- Start Call Function ---
   const startCall = () => {
     const interviewData = interviewInfo.interviewData;
     const candidateName = interviewInfo.username || 'Candidate';
@@ -140,7 +136,6 @@ ${resumeData.resumeText}
       firstMessage = `Hi ${candidateName}, thank you for providing your resume. Are you ready to begin your interview for the ${interviewData.jobPosition}?`;
     } else {
       let questionList = interviewData.questionList;
-
       if (typeof questionList === 'string') {
         try {
           questionList = JSON.parse(questionList);
@@ -148,22 +143,18 @@ ${resumeData.resumeText}
           questionList = [];
         }
       }
-
       const validQuestions = Array.isArray(questionList)
         ? questionList.map(q => q?.question).filter(Boolean)
         : [];
-
-      if (validQuestions.length === 0) {
+      if (!validQuestions.length) {
         toast.error('Interview questions are missing. Cannot start interview.');
         return;
       }
-
       systemContent = `
 You are an AI voice assistant conducting a job interview for the position of ${interviewData.jobPosition}.
 Ask the candidate the following questions one by one:
 - ${validQuestions.join(' - ')}
       `.trim();
-
       firstMessage = `Hi ${candidateName}, welcome to your interview for ${interviewData.jobPosition}. Shall we begin with the first question?`;
     }
 
@@ -185,13 +176,14 @@ Ask the candidate the following questions one by one:
     }
   };
 
+  // --- Stop Interview ---
   const stopInterview = () => {
     setIsCallActive(false);
     vapi?.stop();
     toast('Interview stopped');
   };
 
-  // Generate feedback after call ends
+  // --- Generate Feedback ---
   const GenerateFeedback = useCallback(async () => {
     if (isGeneratingFeedback) return;
     setIsGeneratingFeedback(true);
@@ -207,6 +199,7 @@ Ask the candidate the following questions one by one:
       const res = await fetch('/api/ai-feedback', {
         method: 'POST',
         body: JSON.stringify({ conversation }),
+        headers: { 'Content-Type': 'application/json' },
       });
       const data = await res.json();
 
@@ -236,7 +229,7 @@ Ask the candidate the following questions one by one:
     }
   }, [interview_id, router, interviewInfo, isGeneratingFeedback]);
 
-  // Listen to call events
+  // --- Listen to call events ---
   useEffect(() => {
     if (!vapi) return;
 
@@ -259,6 +252,7 @@ Ask the candidate the following questions one by one:
     };
   }, [vapi, GenerateFeedback]);
 
+  // --- Render Loader ---
   if (loading || !interviewInfo?.interviewData) {
     return (
       <div className="p-10 flex justify-center items-center h-screen">
@@ -268,9 +262,11 @@ Ask the candidate the following questions one by one:
     );
   }
 
+  // --- Main Render ---
   return (
     <div className="p-5 md:p-10 lg:p-20 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
+        {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
           <h2 className="font-bold text-2xl text-gray-800">AI Interview Session</h2>
           <span className="flex gap-2 items-center bg-red-500 text-white px-4 py-2 rounded-full shadow-lg">
@@ -278,7 +274,10 @@ Ask the candidate the following questions one by one:
             <span className="font-mono text-lg font-semibold tracking-wider">{formatTime(timeLeft)}</span>
           </span>
         </div>
+
+        {/* Profile cards */}
         <div className="flex flex-col md:flex-row justify-center items-stretch gap-10">
+          {/* AI Recruiter */}
           <div className="w-full md:w-1/2 lg:w-[450px] bg-white rounded-2xl shadow-xl border border-gray-200 flex flex-col items-center justify-center p-6 gap-5">
             <Image
               src={'/ai.png'}
@@ -299,6 +298,8 @@ Ask the candidate the following questions one by one:
               </span>
             </div>
           </div>
+
+          {/* Candidate */}
           <div className="w-full md:w-1/2 lg:w-[450px] bg-white rounded-2xl shadow-xl border border-gray-200 flex flex-col items-center justify-center p-6 gap-5">
             <div className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center w-32 h-32 rounded-full shadow-lg">
               <span className="text-6xl font-extrabold">
@@ -308,6 +309,8 @@ Ask the candidate the following questions one by one:
             <h2 className="font-semibold text-gray-700 text-2xl">{interviewInfo?.username || 'Candidate'}</h2>
           </div>
         </div>
+
+        {/* Controls */}
         <div className="flex items-center gap-8 justify-center mt-12">
           <div className="p-4 bg-gray-200 rounded-full cursor-not-allowed">
             <Mic className="h-12 w-12 text-gray-400" />
@@ -324,6 +327,7 @@ Ask the candidate the following questions one by one:
 }
 
 export default StartInterview;
+
 
 
 
