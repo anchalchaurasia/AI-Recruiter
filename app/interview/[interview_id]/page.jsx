@@ -91,7 +91,7 @@ const onJoinInterview = async()=>{
 
                  <div className="w-full">
             <h2>Enter your Email </h2>
-            <Input placeholder='e.g. Anchal@gmail.com' onChange={(event)=>{
+            <Input type={email} required placeholder='e.g. Anchal@gmail.com' onChange={(event)=>{
                     setuserEmail(event.target.value);
             }}/>
         </div>  

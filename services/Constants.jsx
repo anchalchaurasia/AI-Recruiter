@@ -124,4 +124,10 @@ Format your response in JSON format:
   "skills": ["<skill_1>", "<skill_2>"],
   "upskillingResources": ["<resource_1>", "<resource_2>"]
 }
+
+if you think there is no resume and any other file then 
+Format your response in JSON format:
+{
+  "Resume": <Invalid>
+}
 `;
