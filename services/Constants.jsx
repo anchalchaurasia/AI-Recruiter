@@ -98,8 +98,10 @@ for hire or not with msg. Give me response in JSON format
 }
 `
 
+
 export const ATS_PROMPT = `
 You are an expert ATS (Applicant Tracking System) analyzer.
+Based on the following resume and job description, provide a detailed analysis.
 
 Resume:
 {{resume}}
@@ -107,42 +109,19 @@ Resume:
 Job Description:
 {{jobDescription}}
 
-IMPORTANT VALIDATION STEP (MUST FOLLOW FIRST):
-- First, analyze whether the provided resume content is actually a real resume.
-- A valid resume should clearly include sections such as:
-  - Name or profile
-  - Skills
-  - Experience or Projects
-  - Education
-- If the input looks like notes, random text, incomplete content, test data, or anything that is NOT a proper resume, then treat it as an INVALID RESUME.
-
-IF THE RESUME IS INVALID:
-Return ONLY the following JSON and NOTHING else:
-{
-  "atsScore": "Invalid Resume",
-  "recommendations": ["Invalid Resume"],
-  "skills": ["Invalid Resume"],
-  "upskillingResources": ["Invalid Resume"]
-}
-
-IF THE RESUME IS VALID:
 Your task:
-1. Calculate an ATS score out of 100.
-2. Provide recommendations to improve the resume (array of strings).
-3. List missing or weak skills based on the job description (array of strings).
-4. Suggest upskilling resources for the identified skill gaps (array of strings).
+1.  Calculate an ATS score out of 100.
+2.  Provide a short list of recommendations to improve the resume. Each recommendation should be a string in an array.
+3.  List skills to improve based on the job description. Each skill should be a string in an array.
+4.  Suggest upskilling resources (e.g., online courses, tutorials) for the identified skill gaps. Each resource should be a string in an array.
 
-Rules:
-- Keep everything short and clear.
-- Do NOT use markdown (**).
-- Return ONLY valid JSON.
+Keep the recommendations, skills, and resources concise and in point form. Do not use markdown like **.
 
-Valid response format:
+Format your response in JSON format:
 {
-  "atsScore": 75,
-  "recommendations": ["Improve project descriptions", "Add more measurable achievements"],
-  "skills": ["React", "System Design"],
-  "upskillingResources": ["React official docs", "System Design course on Udemy"]
+  "atsScore": <score_out_of_100>,
+  "recommendations": ["<recommendation_1>", "<recommendation_2>"],
+  "skills": ["<skill_1>", "<skill_2>"],
+  "upskillingResources": ["<resource_1>", "<resource_2>"]
 }
 `;
-

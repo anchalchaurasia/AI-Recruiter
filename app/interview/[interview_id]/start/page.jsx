@@ -1,7 +1,3 @@
-
-
-
-
 'use client';
 import { Loader2Icon, Mic, Phone, Timer } from 'lucide-react';
 import Image from 'next/image';
@@ -150,7 +146,8 @@ Your task is to ask the candidate the following questions one by one.
       `.trim();
       firstMessage = `Hi ${candidateName}, welcome to your interview for the ${interviewData.jobPosition} role. Shall we begin with the first question?`;
     }
-const assistantPayload = {
+
+    const assistantPayload = {
       "name": "AI Recruite",
       firstMessage,
       "transcriber": {
