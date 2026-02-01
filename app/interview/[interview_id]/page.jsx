@@ -91,7 +91,7 @@ const onJoinInterview = async()=>{
 
                  <div className="w-full">
             <h2>Enter your Email </h2>
-            <Input type={email} required placeholder='e.g. Anchal@gmail.com' onChange={(event)=>{
+            <Input  required placeholder='e.g. Anchal@gmail.com' onChange={(event)=>{
                     setuserEmail(event.target.value);
             }}/>
         </div>  
@@ -134,4 +134,148 @@ const onJoinInterview = async()=>{
   )
 }
 
-export default Interview
+export default Interview;
+
+
+
+
+// "use client";
+// import React, { useContext, useEffect, useState } from 'react'
+// import InterviewHeader from '../_components/InterviewHeader'
+// import Image from 'next/image'
+// import { Clock, Info, Loader2Icon, Video } from 'lucide-react'
+// import { Input } from '@/components/ui/input'
+// import { Button } from '@/components/ui/button'
+// import { useParams } from 'next/navigation'
+// import { supabase } from '@/services/supabaseClient';
+// import { toast } from 'sonner';
+// import { InterviewDataContext } from '@/context/InterviewDataContext';
+// import { useRouter } from 'next/navigation';
+// import QuestionsList from '@/app/(main)/dashboard/create-interview/_components/QuestionsList';
+
+// function Interview() {
+
+//     const { interview_id } = useParams(); 
+//     const [interviewdata, setinterviewdata] = useState();
+//     const [username, setusername] = useState('');
+//     const [loading, setloading] = useState(false);
+//     const [userEmail, setuserEmail] = useState('');
+//     const { interviewInfo, setinterviewInfo } = useContext(InterviewDataContext);
+//     const router = useRouter();
+
+//     // ✅ Email validation function
+//     const isValidEmail = (email) => {
+//         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+//     };
+
+//     useEffect(() => {
+//         interview_id && getInterviewDetails();
+//     }, [interview_id]);
+
+//     const getInterviewDetails = async () => {
+//         setloading(true);
+//         try {
+//             let { data: interviews, error } = await supabase
+//                 .from('interviews')
+//                 .select("jobPosition,jobDescription,duration,type")
+//                 .eq('interview_id', interview_id);
+
+//             if (!interviews || interviews.length === 0) {
+//                 toast('Incorrect Interview Link');
+//                 setloading(false);
+//                 return;
+//             }
+
+//             setinterviewdata(interviews[0]);
+//             setloading(false);
+
+//         } catch (error) {
+//             setloading(false);
+//             toast('Incorrect Interview Link');
+//         }
+//     };
+
+//     const onJoinInterview = async () => {
+
+//         if (!isValidEmail(userEmail)) {
+//             toast('Please enter a valid email address');
+//             return;
+//         }
+
+//         setloading(true);
+
+//         let { data: interviews, error } = await supabase
+//             .from('interviews')
+//             .select('*')
+//             .eq('interview_id', interview_id);
+
+//         setinterviewInfo({
+//             username: username,
+//             userEmail: userEmail,
+//             interviewData: interviews[0]
+//         });
+
+//         router.push('/interview/' + interview_id + '/start');
+//         setloading(false);
+//     };
+
+//     return (
+//         <div className='px-10 md:px-28 lg:px-48 xl:px-64 mt-16 '>
+//             <div className="flex flex-col items-center justify-center border rounded-xl p-7 lg:px-33 xl:px-52 mb-20">
+
+//                 <Image src={'/logo.png'} width={80} height={80} alt='logo' className='w-[80px]' />
+//                 <h2 className='mt-3'>AI-Powered Interview Platform</h2>
+
+//                 <Image src={'/interview.png'} alt='interview' width={200} height={200} className='my-6' />
+
+//                 <h2 className='font-bold text-xl '>{interviewdata?.jobPosition}</h2>
+//                 <h2 className='flex gap-2 items-center text-gray-500 mt-3'>
+//                     <Clock className='h-4 w-4' /> {interviewdata?.duration}
+//                 </h2>
+
+//                 <div className="w-full mt-4">
+//                     <h2>Enter your Full name</h2>
+//                     <Input
+//                         placeholder='e.g. Anchal'
+//                         value={username}
+//                         onChange={(e) => setusername(e.target.value)}
+//                     />
+//                 </div>
+
+//                 <div className="w-full mt-4">
+//                     <h2>Enter your Email</h2>
+//                     <Input
+//                         placeholder='e.g. anchal@gmail.com'
+//                         value={userEmail}
+//                         onChange={(e) => setuserEmail(e.target.value)}
+//                     />
+//                 </div>
+
+//                 <div className="p-3 mt-5 flex gap-4 rounded-lg">
+//                     <Info className='text-primary' />
+//                     <div>
+//                         <h2 className='font-bold'>Before you begin</h2>
+//                         <ul>
+//                             <li className='text-sm text-primary'>Test your camera and microphone</li>
+//                             <li className='text-sm text-primary'>Ensure stable internet connection</li>
+//                             <li className='text-sm text-primary'>Find a quiet place for interview</li>
+//                         </ul>
+//                     </div>
+//                 </div>
+
+//                 <Button
+//                     disabled={loading || !username || !isValidEmail(userEmail)}
+//                     className='mt-5 w-full font-bold'
+//                     onClick={onJoinInterview}
+//                 >
+//                     <Video />
+//                     {loading && <Loader2Icon className="animate-spin ml-2" />}
+//                     Join Interview
+//                 </Button>
+
+//             </div>
+//         </div>
+//     );
+// }
+
+// export default Interview;

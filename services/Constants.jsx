@@ -100,34 +100,81 @@ for hire or not with msg. Give me response in JSON format
 
 
 export const ATS_PROMPT = `
-You are an expert ATS (Applicant Tracking System) analyzer.
-Based on the following resume and job description, provide a detailed analysis.
+You are a VERY STRICT ATS (Applicant Tracking System) resume validator.
 
-Resume:
+Resume Input:
 {{resume}}
 
 Job Description:
 {{jobDescription}}
 
-Your task:
-1.  Calculate an ATS score out of 100.
-2.  Provide a short list of recommendations to improve the resume. Each recommendation should be a string in an array.
-3.  List skills to improve based on the job description. Each skill should be a string in an array.
-4.  Suggest upskilling resources (e.g., online courses, tutorials) for the identified skill gaps. Each resource should be a string in an array.
+==============================
+STEP 1 — RESUME VALIDATION
+==============================
 
-Keep the recommendations, skills, and resources concise and in point form. Do not use markdown like **.
+First, determine whether the input is a REAL CANDIDATE RESUME.
 
-Format your response in JSON format:
+A REAL RESUME must clearly contain AT LEAST 3 of the following:
+- Candidate name
+- Contact details (email OR phone OR LinkedIn OR GitHub)
+- Skills section (list or bullet points)
+- Work experience OR project descriptions with roles
+- Education details (degree, college, year)
+
+The following inputs are NOT resumes:
+- College assignments or practical files
+- Lab manuals or experiment files
+- Question–answer documents
+- Notes, tutorials, guides, explanations
+- Random text, copied articles, or junk data
+- Any content written in:
+  Q1/Q2/Q3 format OR
+  Aim / Objective / Method / Result / Conclusion format
+
+==============================
+INVALID RESUME RULE (MANDATORY)
+==============================
+
+IF the input is NOT a real resume,
+RETURN ONLY this JSON.
+Do NOT explain anything.
+Do NOT add extra text.
+
 {
-  "atsScore": <score_out_of_100>,
-  "recommendations": ["<recommendation_1>", "<recommendation_2>"],
-  "skills": ["<skill_1>", "<skill_2>"],
-  "upskillingResources": ["<resource_1>", "<resource_2>"]
+  "atsScore": "Invalid Resume",
+  "recommendations": ["Invalid Resume"],
+  "skills": ["Invalid Resume"],
+  "upskillingResources": ["Invalid Resume"]
 }
 
-if you think there is no resume and any other file then 
-Format your response in JSON format:
+==============================
+STEP 2 — ATS ANALYSIS
+(ONLY IF RESUME IS VALID)
+==============================
+
+Tasks:
+1. Calculate ATS score out of 100 based on relevance to the job description.
+2. Provide clear resume improvement recommendations.
+3. Identify missing or weak skills compared to the job description.
+4. Suggest upskilling resources.
+
+==============================
+RESPONSE RULES
+==============================
+
+- Output ONLY valid JSON
+- No markdown
+- No explanations
+- Keep arrays concise
+
+==============================
+VALID JSON FORMAT
+==============================
+
 {
-  "Resume": <Invalid>
+  "atsScore": 0,
+  "recommendations": [],
+  "skills": [],
+  "upskillingResources": []
 }
 `;
